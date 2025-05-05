@@ -553,6 +553,20 @@ function showMemberModal(member, groupId) {
     const tabHeaders = document.querySelector('.tab-headers');
     const tabContent = document.querySelector('.tab-content');
     
+// 修改 showMemberModal 函数，添加文件上传功能
+function showMemberModal(member, groupId) {
+    const modal = document.getElementById('member-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const nameInput = document.getElementById('member-name');
+    const idInput = document.getElementById('member-id');
+    const projectTopicContainer = document.getElementById('project-topic-container');
+    const projectTopicInput = document.getElementById('member-project-topic');
+    const subgroupContainer = document.getElementById('subgroup-select-container');
+    const subgroupSelect = document.getElementById('member-subgroup');
+    const tabHeaders = document.querySelector('.tab-headers');
+    const tabContent = document.querySelector('.tab-content');
+
+    
     // 保存当前成员和组别
     currentMember = member;
     
