@@ -613,7 +613,16 @@ function showMemberModal(member, groupId) {
         
         // 获取该周的进度内容
         const progressContent = member && member.progress[week] ? member.progress[week] : '';
-        
+
+        tabPanel.innerHTML = `
+            <div class="progress-content">
+                <textarea placeholder="请输入第${week}周的进度内容...">${progressContent}</textarea>
+            </div>
+            <div class="file-upload">
+                <label for="file-upload-week-${week}">上传文件：</label>
+                <input type="file" id="file-upload-week-${week}" accept=".pdf,.doc,.docx,.txt,.jpg,.png,.gif">
+            </div>
+        `;
         // 如果是大模型辅助课程学习组，显示本周学习主题
         let topicInfo = '';
         if (groupId === 'group-3' && member) {
