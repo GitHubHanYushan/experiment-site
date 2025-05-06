@@ -540,78 +540,38 @@ function updateSettingsUI() {
     document.getElementById('group-5-count-setting').value = getMemberCount('group-5');
 }
 
-// 显示成员详情模态框
 function showMemberModal(member, groupId) {
     const modal = document.getElementById('member-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const nameInput = document.getElementById('member-name');
-    const idInput = document.getElementById('member-id');
-    const projectTopicContainer = document.getElementById('project-topic-container');
-    const projectTopicInput = document.getElementById('member-project-topic');
-    const subgroupContainer = document.getElementById('subgroup-select-container');
-    const subgroupSelect = document.getElementById('member-subgroup');
     const tabHeaders = document.querySelector('.tab-headers');
     const tabContent = document.querySelector('.tab-content');
-    
 
-
-    
-    // 保存当前成员和组别
-    currentMember = member;
-    
-    // 设置模态框标题
-    modalTitle.textContent = member ? '编辑成员进度' : '添加新成员';
-    
-    // 设置成员信息
-    nameInput.value = member ? member.name : '';
-    idInput.value = member ? member.id : '';
-    
-    // 处理项目主题输入框（仅科研和硬件课题组需要）
-    if (groupId === 'group-1' || groupId === 'group-2') {
-        projectTopicContainer.style.display = 'block';
-        projectTopicInput.value = member && member.projectTopic ? member.projectTopic : '';
-    } else {
-        projectTopicContainer.style.display = 'none';
-    }
-    
-    // 处理分组选择器（仅大模型辅助课程学习组需要）
-    if (groupId === 'group-3') {
-        subgroupContainer.style.display = 'block';
-        subgroupSelect.value = member ? member.subgroup : 'linear-algebra';
-    } else {
-        subgroupContainer.style.display = 'none';
-    }
-    
-    // 生成周次选项卡
+    // 清空选项卡内容
     tabHeaders.innerHTML = '';
     tabContent.innerHTML = '';
-    
+
     for (let week = 1; week <= 11; week++) {
         // 创建选项卡标题
         const tabHeader = document.createElement('div');
         tabHeader.className = `tab-header ${week === currentWeek ? 'active' : ''}`;
         tabHeader.textContent = `第${week}周`;
         tabHeader.setAttribute('data-week', week);
-        
-        // 选项卡点击事件
-        tabHeader.addEventListener('click', function() {
-            // 移除所有active类
+
+        // 点击事件
+        tabHeader.addEventListener('click', function () {
             document.querySelectorAll('.tab-header').forEach(header => header.classList.remove('active'));
             document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
-            
-            // 添加当前选项卡的active类
             this.classList.add('active');
             document.querySelector(`.tab-panel[data-week="${week}"]`).classList.add('active');
         });
-        
+
         tabHeaders.appendChild(tabHeader);
-        
+
         // 创建选项卡内容
         const tabPanel = document.createElement('div');
         tabPanel.className = `tab-panel ${week === currentWeek ? 'active' : ''}`;
         tabPanel.setAttribute('data-week', week);
-        
-       // 获取该周的进度内容
+
+        // 获取该周的进度内容
         const progressContent = member && member.progress[week] ? member.progress[week] : '';
 
         tabPanel.innerHTML = `
@@ -642,31 +602,11 @@ function showMemberModal(member, groupId) {
         });
 
         tabContent.appendChild(tabPanel);
-    
-
-        
-        // 如果是大模型辅助课程学习组，显示本周学习主题
-        let topicInfo = '';
-        if (groupId === 'group-3' && member) {
-            const subgroup = member.subgroup;
-            const topic = groupData['group-3']?.subgroups[subgroup]?.topics[week] || '';
-            if (topic) {
-                topicInfo = `<div class="week-topic">本周学习主题: <strong>${topic}</strong></div>`;
-            }
-        }
-        
-        tabPanel.innerHTML = `
-            ${topicInfo}
-            <div class="progress-content">
-                <textarea placeholder="请输入第${week}周的进度内容...">${progressContent}</textarea>
-            </div>
-        `;
-        
-        tabContent.appendChild(tabPanel);
     }
-    
+
     // 显示模态框
     modal.style.display = 'flex';
+}
     
     // 保存组别信息到保存按钮
     document.getElementById('save-member').setAttribute('data-group', groupId);
