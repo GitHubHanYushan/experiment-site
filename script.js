@@ -611,8 +611,38 @@ function showMemberModal(member, groupId) {
         tabPanel.className = `tab-panel ${week === currentWeek ? 'active' : ''}`;
         tabPanel.setAttribute('data-week', week);
         
-        // 获取该周的进度内容
+       // 获取该周的进度内容
         const progressContent = member && member.progress[week] ? member.progress[week] : '';
+
+        tabPanel.innerHTML = `
+            <div class="progress-content">
+                <textarea placeholder="请输入第${week}周的进度内容...">${progressContent}</textarea>
+            </div>
+            <div class="file-upload">
+                <label for="file-upload-week-${week}">上传文件：</label>
+                <input type="file" id="file-upload-week-${week}" accept=".pdf,.doc,.docx,.txt,.jpg,.png,.gif">
+            </div>
+        `;
+
+        // 监听文件上传事件
+        const fileInput = tabPanel.querySelector(`#file-upload-week-${week}`);
+        fileInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const fileData = event.target.result;
+                    if (!member.progress[week]) {
+                        member.progress[week] = {};
+                    }
+                    member.progress[week].file = fileData; // 将文件数据存储到成员的进度中
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        tabContent.appendChild(tabPanel);
+    
 
         
         // 如果是大模型辅助课程学习组，显示本周学习主题
