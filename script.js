@@ -625,7 +625,7 @@ function showMemberModal(member, groupId) {
                 ${uploadedFile ? `<p>已上传文件：<a href="${uploadedFile}" target="_blank">查看文件</a></p>` : ''}
             </div>
         `;
-        // 监听文件上传事件
+       // 监听文件上传事件
         const fileInput = tabPanel.querySelector(`#file-upload-week-${week}`);
         fileInput.addEventListener('change', function (e) {
             const file = e.target.files[0];
@@ -637,6 +637,17 @@ function showMemberModal(member, groupId) {
                         member.progress[week] = {};
                     }
                     member.progress[week].file = fileData; // 将文件数据存储到成员的进度中
+
+                    // 更新文件链接
+                    const fileLink = tabPanel.querySelector('.uploaded-file-link');
+                    if (fileLink) {
+                        fileLink.innerHTML = `<a href="${fileData}" target="_blank">查看文件</a>`;
+                    } else {
+                        const newFileLink = document.createElement('div');
+                        newFileLink.className = 'uploaded-file-link';
+                        newFileLink.innerHTML = `<a href="${fileData}" target="_blank">查看文件</a>`;
+                        tabPanel.appendChild(newFileLink);
+                    }
                 };
                 reader.readAsDataURL(file);
             }
