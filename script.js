@@ -625,25 +625,27 @@ function showMemberModal(member, groupId) {
                 ${uploadedFile ? `<p>已上传文件：<a href="${uploadedFile}" target="_blank">查看文件</a></p>` : ''}
             </div>
         `;
-        // 如果是大模型辅助课程学习组，显示本周学习主题
-        let topicInfo = '';
-        if (groupId === 'group-3' && member) {
-            const subgroup = member.subgroup;
-            const topic = groupData['group-3']?.subgroups[subgroup]?.topics[week] || '';
-            if (topic) {
-                topicInfo = `<div class="week-topic">本周学习主题: <strong>${topic}</strong></div>`;
+        // 监听文件上传事件
+        const fileInput = tabPanel.querySelector(`#file-upload-week-${week}`);
+        fileInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const fileData = event.target.result;
+                    if (!member.progress[week]) {
+                        member.progress[week] = {};
+                    }
+                    member.progress[week].file = fileData; // 将文件数据存储到成员的进度中
+                };
+                reader.readAsDataURL(file);
             }
-        }
-        
-        tabPanel.innerHTML = `
-            ${topicInfo}
-            <div class="progress-content">
-                <textarea placeholder="请输入第${week}周的进度内容...">${progressContent}</textarea>
-            </div>
-        `;
-        
+        });
+
         tabContent.appendChild(tabPanel);
-    }
+    
+     
+    }    
     
     // 显示模态框
     modal.style.display = 'flex';
